@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
+import { createPortal } from 'react-dom'
 import { ChevronLeft, ChevronRight, X } from 'lucide-react'
 
 export interface LightboxImage {
@@ -17,6 +18,7 @@ interface LightboxProps {
 /** Accessible image carousel: arrow keys navigate, Esc closes, focus is trapped. */
 export function Lightbox({ images, startIndex, projectTitle, onClose }: LightboxProps) {
   const [index, setIndex] = useState(startIndex)
+  const dialogRef = useRef<HTMLDivElement>(null)
   const closeRef = useRef<HTMLButtonElement>(null)
 
   const prev = useCallback(
@@ -25,15 +27,40 @@ export function Lightbox({ images, startIndex, projectTitle, onClose }: Lightbox
   )
   const next = useCallback(() => setIndex((i) => (i + 1) % images.length), [images.length])
 
+  // Move focus into the dialog on open; restore it to the trigger on close.
   useEffect(() => {
+    const previouslyFocused = document.activeElement as HTMLElement | null
     closeRef.current?.focus()
+    return () => previouslyFocused?.focus?.()
   }, [])
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose()
-      else if (e.key === 'ArrowLeft') prev()
-      else if (e.key === 'ArrowRight') next()
+      if (e.key === 'Escape') {
+        onClose()
+      } else if (e.key === 'ArrowLeft') {
+        prev()
+      } else if (e.key === 'ArrowRight') {
+        next()
+      } else if (e.key === 'Tab') {
+        // Trap focus within the dialog.
+        const root = dialogRef.current
+        if (!root) return
+        const focusable = root.querySelectorAll<HTMLElement>(
+          'button, [href], input, [tabindex]:not([tabindex="-1"])',
+        )
+        if (focusable.length === 0) return
+        const first = focusable[0]
+        const last = focusable[focusable.length - 1]
+        const active = document.activeElement
+        if (e.shiftKey && active === first) {
+          e.preventDefault()
+          last.focus()
+        } else if (!e.shiftKey && active === last) {
+          e.preventDefault()
+          first.focus()
+        }
+      }
     }
     document.addEventListener('keydown', onKey)
     const prevOverflow = document.body.style.overflow
@@ -47,12 +74,16 @@ export function Lightbox({ images, startIndex, projectTitle, onClose }: Lightbox
   const current = images[index]
   const multiple = images.length > 1
 
-  return (
+  // Rendered via a portal into <body> so a transformed/animated ancestor (the
+  // project card's Framer Motion hover-lift / scroll-reveal) can't become the
+  // containing block for this position:fixed overlay and box it inside the card.
+  return createPortal(
     <div
+      ref={dialogRef}
       role="dialog"
       aria-modal="true"
       aria-label={`${projectTitle} screenshots`}
-      className="fixed inset-0 z-[100] flex flex-col bg-black/85 backdrop-blur-sm"
+      className="fixed inset-0 z-[200] flex flex-col bg-black/85 backdrop-blur-sm"
       onClick={onClose}
     >
       {/* Top bar */}
@@ -93,7 +124,7 @@ export function Lightbox({ images, startIndex, projectTitle, onClose }: Lightbox
         <img
           src={current.src}
           alt={current.caption || `${projectTitle} screenshot ${index + 1}`}
-          className="max-h-[78vh] max-w-full rounded-lg object-contain shadow-2xl"
+          className="max-h-[85vh] max-w-[90vw] rounded-lg object-contain shadow-2xl"
           onClick={(e) => e.stopPropagation()}
         />
 
@@ -138,6 +169,7 @@ export function Lightbox({ images, startIndex, projectTitle, onClose }: Lightbox
           </div>
         )}
       </div>
-    </div>
+    </div>,
+    document.body,
   )
 }
