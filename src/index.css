@@ -1,0 +1,121 @@
+@import '@fontsource/inter/400.css';
+@import '@fontsource/inter/500.css';
+@import '@fontsource/inter/600.css';
+@import '@fontsource/space-grotesk/500.css';
+@import '@fontsource/space-grotesk/600.css';
+@import '@fontsource/space-grotesk/700.css';
+@import '@fontsource/jetbrains-mono/400.css';
+@import '@fontsource/jetbrains-mono/500.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Light theme tokens */
+    --bg: #f7f8fa;
+    --surface: #ffffff;
+    --border: rgba(15, 23, 42, 0.1);
+    --text: #0f172a;
+    --muted: #5b6472;
+  }
+
+  .dark {
+    /* Dark theme tokens */
+    --bg: #0b0f17;
+    --surface: #131922;
+    --border: rgba(255, 255, 255, 0.1);
+    --text: #e6eaf0;
+    --muted: #9ba3af;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    /* Offset for the sticky nav when jumping to anchors */
+    scroll-padding-top: 5rem;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+  }
+
+  body {
+    background-color: var(--bg);
+    color: var(--text);
+    font-family: theme('fontFamily.sans');
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  /* Visible, accessible focus rings */
+  :focus-visible {
+    outline: 2px solid #22d3ee;
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+
+  ::selection {
+    background-color: rgba(99, 102, 241, 0.35);
+    color: var(--text);
+  }
+}
+
+@layer components {
+  .text-muted {
+    color: var(--muted);
+  }
+
+  .surface {
+    background-color: var(--surface);
+    border: 1px solid var(--border);
+  }
+
+  .hairline {
+    border-color: var(--border);
+  }
+
+  .accent-text {
+    background: linear-gradient(90deg, #22d3ee 0%, #6366f1 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+  }
+
+  /* Mono kicker / section label */
+  .kicker {
+    font-family: theme('fontFamily.mono');
+    font-size: 0.75rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .tech-chip {
+    font-family: theme('fontFamily.mono');
+    font-size: 0.72rem;
+    line-height: 1;
+    padding: 0.35rem 0.55rem;
+    border-radius: 0.4rem;
+    background-color: var(--bg);
+    border: 1px solid var(--border);
+    color: var(--muted);
+    white-space: nowrap;
+  }
+}
+
+/* Custom scrollbar (dark base friendly) */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(120, 130, 150, 0.35);
+  border-radius: 999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(120, 130, 150, 0.55);
+}

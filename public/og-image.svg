@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630">
+  <defs>
+    <linearGradient id="accent" x1="0" y1="0" x2="1200" y2="0" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#22D3EE"/>
+      <stop offset="1" stop-color="#6366F1"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="#0B0F17"/>
+  <rect width="1200" height="630" fill="none"/>
+  <text x="80" y="250" font-family="'JetBrains Mono', monospace" font-size="28" letter-spacing="6" fill="#9BA3AF">AI &amp; DATA ENGINEER</text>
+  <text x="76" y="360" font-family="'Space Grotesk', system-ui, sans-serif" font-size="92" font-weight="700" fill="#E6EAF0">Shreyash Kalal</text>
+  <text x="80" y="440" font-family="Inter, system-ui, sans-serif" font-size="34" fill="#9BA3AF">I build <tspan fill="url(#accent)" font-weight="600">production AI systems</tspan> and the</text>
+  <text x="80" y="488" font-family="Inter, system-ui, sans-serif" font-size="34" fill="#9BA3AF">large-scale data platforms beneath them.</text>
+  <rect x="80" y="540" width="120" height="6" rx="3" fill="url(#accent)"/>
+</svg>
