@@ -32,6 +32,12 @@ export interface Project {
   description: string
   chips: string[]
   buttons: ProjectButton[]
+  /**
+   * Lifecycle state. "upcoming" projects are in the design/architecture phase:
+   * they render an architecture-preview placeholder and a single link button
+   * (no live demo, reveal token, or screenshot lightbox).
+   */
+  status?: 'upcoming'
   /** Optional caption shown under the action buttons. */
   caption?: string
   /** Screenshot paths (under /public). Missing files are tolerated at runtime. */
@@ -243,6 +249,29 @@ export const projects: Project[] = [
       '/images/projects/team-ai-memory/01-artifacts.png',
       '/images/projects/team-ai-memory/02-detail.png',
       '/images/projects/team-ai-memory/03-search.png',
+    ],
+  },
+  {
+    id: 'ai-native-developer-board',
+    title: 'AI-Native Developer Board',
+    status: 'upcoming',
+    description:
+      'A platform for directing AI coding agents like a team rather than pair-programming one session at a time. Work enters as tickets on a JIRA-style board; a durable loop controller (Temporal, one workflow per ticket) runs the develop → verify → iterate cycle while developers steer by comment. Its spine: a canonical Run domain kept separate from JIRA via one-way projections, an append-only event log as the source of truth (agent sessions are disposable), a deterministic Turn Assembler that classifies human feedback into precise directives, optimistic branch-per-ticket concurrency behind a serialized merge queue, and three ordered verification gates with grader anti-gaming. The vision: make AI-assisted development auditable, reproducible, and reviewable — humans directing and verifying rather than hand-writing every change.',
+    chips: [
+      'Temporal',
+      'Event Sourcing',
+      'Postgres',
+      'S3',
+      'JIRA',
+      'LLM-as-Judge',
+      'CI/CD',
+      'Merge Queue',
+    ],
+    buttons: [
+      {
+        label: 'View Architecture',
+        href: 'https://github.com/Shreyash-prog/ai-native-board',
+      },
     ],
   },
 ]

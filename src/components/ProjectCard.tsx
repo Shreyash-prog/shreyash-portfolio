@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { ArrowUpRight, Check, Copy, Eye, EyeOff, ImageIcon } from 'lucide-react'
+import { ArrowUpRight, Check, Copy, DraftingCompass, Eye, EyeOff, ImageIcon } from 'lucide-react'
 import type { Project } from '../data/content'
 import { useAvailableImages } from '../hooks/useAvailableImages'
 import { Lightbox, type LightboxImage } from './Lightbox'
@@ -67,8 +67,60 @@ function RevealToken({ value, label }: { value: string; label: string }) {
   )
 }
 
+/** Small cyan→indigo pill flagging a project in the design/architecture phase. */
+function UpcomingPill() {
+  return (
+    <span className="inline-flex items-center rounded-full bg-accent-gradient px-2.5 py-0.5 text-[11px] font-semibold uppercase tracking-wide text-black">
+      Upcoming
+    </span>
+  )
+}
+
+/** Blueprint-styled placeholder used in place of a lead screenshot for upcoming projects. */
+function ArchitecturePreview() {
+  return (
+    <div className="relative flex aspect-[16/10] w-full items-center justify-center overflow-hidden border-b border-[color:var(--border)] bg-[color:var(--bg)]">
+      {/* Blueprint grid, faded toward the edges */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0"
+        style={{
+          backgroundImage:
+            'linear-gradient(to right, rgba(34,211,238,0.16) 1px, transparent 1px), linear-gradient(to bottom, rgba(99,102,241,0.14) 1px, transparent 1px)',
+          backgroundSize: '26px 26px',
+          maskImage: 'radial-gradient(120% 90% at 50% 45%, #000 40%, transparent 100%)',
+          WebkitMaskImage: 'radial-gradient(120% 90% at 50% 45%, #000 40%, transparent 100%)',
+        }}
+      />
+      {/* Faint connected-nodes motif for an architecture feel */}
+      <svg
+        aria-hidden="true"
+        viewBox="0 0 160 100"
+        className="pointer-events-none absolute inset-0 h-full w-full opacity-40"
+        preserveAspectRatio="xMidYMid slice"
+      >
+        <line x1="34" y1="30" x2="80" y2="50" stroke="rgba(34,211,238,0.5)" strokeWidth="0.8" />
+        <line x1="126" y1="30" x2="80" y2="50" stroke="rgba(99,102,241,0.5)" strokeWidth="0.8" />
+        <line x1="34" y1="70" x2="80" y2="50" stroke="rgba(99,102,241,0.5)" strokeWidth="0.8" />
+        <line x1="126" y1="70" x2="80" y2="50" stroke="rgba(34,211,238,0.5)" strokeWidth="0.8" />
+        <circle cx="80" cy="50" r="3.2" fill="rgba(34,211,238,0.85)" />
+        <circle cx="34" cy="30" r="2.4" fill="rgba(99,102,241,0.8)" />
+        <circle cx="126" cy="30" r="2.4" fill="rgba(99,102,241,0.8)" />
+        <circle cx="34" cy="70" r="2.4" fill="rgba(34,211,238,0.75)" />
+        <circle cx="126" cy="70" r="2.4" fill="rgba(34,211,238,0.75)" />
+      </svg>
+
+      <div className="relative z-10 flex flex-col items-center gap-2 text-muted">
+        <DraftingCompass size={26} aria-hidden="true" className="text-accent-cyan" />
+        <span className="font-mono text-xs uppercase tracking-[0.18em]">Architecture preview</span>
+      </div>
+    </div>
+  )
+}
+
 export function ProjectCard({ project }: { project: Project }) {
-  const images = useAvailableImages(project.screenshots)
+  const isUpcoming = project.status === 'upcoming'
+  const images = useAvailableImages(isUpcoming ? undefined : project.screenshots)
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null)
 
   const lightboxImages: LightboxImage[] = images.map((src) => ({
@@ -76,7 +128,7 @@ export function ProjectCard({ project }: { project: Project }) {
     caption: captionFromPath(src),
   }))
 
-  const hasLead = images.length > 0
+  const hasLead = !isUpcoming && images.length > 0
 
   return (
     <article className="group flex flex-col overflow-hidden rounded-2xl surface transition-all duration-300 hover:-translate-y-1 hover:border-accent-cyan hover:shadow-lift">
@@ -100,6 +152,8 @@ export function ProjectCard({ project }: { project: Project }) {
             </span>
           )}
         </button>
+      ) : isUpcoming ? (
+        <ArchitecturePreview />
       ) : (
         // Graceful placeholder when no screenshots are available yet.
         <div className="flex aspect-[16/10] w-full items-center justify-center border-b border-[color:var(--border)] bg-[color:var(--bg)] text-muted">
@@ -109,7 +163,10 @@ export function ProjectCard({ project }: { project: Project }) {
       )}
 
       <div className="flex flex-1 flex-col p-5 sm:p-6">
-        <h3 className="font-mono text-lg font-semibold tracking-tight">{project.title}</h3>
+        <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
+          <h3 className="font-mono text-lg font-semibold tracking-tight">{project.title}</h3>
+          {isUpcoming && <UpcomingPill />}
+        </div>
         <p className="mt-3 text-sm leading-relaxed text-muted">{project.description}</p>
 
         {/* Tech chips */}
@@ -122,7 +179,7 @@ export function ProjectCard({ project }: { project: Project }) {
         </ul>
 
         {/* Reveal-token control */}
-        {project.revealToken && (
+        {!isUpcoming && project.revealToken && (
           <RevealToken value={project.revealToken.value} label={project.revealToken.label} />
         )}
 
@@ -135,7 +192,7 @@ export function ProjectCard({ project }: { project: Project }) {
               target="_blank"
               rel="noopener noreferrer"
               className={
-                i === 0
+                i === 0 && !isUpcoming
                   ? 'inline-flex items-center gap-1.5 rounded-lg bg-accent-gradient px-3.5 py-2 text-sm font-semibold text-black transition-transform hover:-translate-y-0.5'
                   : 'inline-flex items-center gap-1.5 rounded-lg border border-[color:var(--border)] bg-[color:var(--bg)] px-3.5 py-2 text-sm font-medium transition-colors hover:border-accent-cyan'
               }
@@ -151,7 +208,7 @@ export function ProjectCard({ project }: { project: Project }) {
         )}
       </div>
 
-      {lightboxIndex !== null && lightboxImages.length > 0 && (
+      {!isUpcoming && lightboxIndex !== null && lightboxImages.length > 0 && (
         <Lightbox
           images={lightboxImages}
           startIndex={lightboxIndex}
