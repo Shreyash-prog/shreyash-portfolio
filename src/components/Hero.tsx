@@ -1,4 +1,4 @@
-import { ArrowDown, Github, Linkedin } from 'lucide-react'
+import { ArrowDown, FileText, Github, Linkedin, Target } from 'lucide-react'
 import { hero, profile } from '../data/content'
 import { Reveal } from './Reveal'
 
@@ -28,7 +28,15 @@ export function Hero() {
 
       <Reveal delay={0.18}>
         <p className="mt-6 max-w-2xl text-base leading-relaxed text-muted sm:text-lg">
-          {hero.subline}
+          {hero.subline.map((seg, i) =>
+            typeof seg === 'string' ? (
+              seg
+            ) : (
+              <span key={i} className="accent-text font-medium">
+                {seg.accent}
+              </span>
+            ),
+          )}
         </p>
       </Reveal>
 
@@ -40,6 +48,14 @@ export function Hero() {
           >
             View Projects
             <ArrowDown size={16} aria-hidden="true" />
+          </a>
+
+          <a
+            href="#bet"
+            className="inline-flex items-center gap-2 rounded-lg border border-[color:var(--border)] surface px-4 py-2.5 text-sm font-medium transition-colors hover:border-accent-cyan"
+          >
+            <Target size={16} aria-hidden="true" />
+            The Current Bet
           </a>
 
           <a
@@ -60,6 +76,16 @@ export function Hero() {
           >
             <Linkedin size={16} aria-hidden="true" />
             LinkedIn
+          </a>
+
+          <a
+            href={profile.resume}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 rounded-lg border border-[color:var(--border)] surface px-4 py-2.5 text-sm font-medium transition-colors hover:border-accent-cyan"
+          >
+            <FileText size={16} aria-hidden="true" />
+            Resume
           </a>
         </div>
       </Reveal>

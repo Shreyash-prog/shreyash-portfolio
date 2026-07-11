@@ -1,4 +1,4 @@
-import { Github, Linkedin, Mail } from 'lucide-react'
+import { Github, Linkedin, Mail, Phone } from 'lucide-react'
 import { contact, profile } from '../data/content'
 import { Reveal } from './Reveal'
 import { SectionHeading } from './SectionHeading'
@@ -6,7 +6,7 @@ import { SectionHeading } from './SectionHeading'
 export function Contact() {
   return (
     <section id="contact" className="mx-auto max-w-6xl scroll-mt-20 px-5 py-20 sm:px-8 md:py-28">
-      <SectionHeading kicker="// 06 — Contact" title={contact.heading} />
+      <SectionHeading kicker="// 07 — Contact" title={contact.heading} />
 
       <Reveal>
         <p className="max-w-2xl text-lg leading-relaxed text-muted">{contact.invitation}</p>
@@ -20,6 +20,13 @@ export function Contact() {
           >
             <Mail size={17} aria-hidden="true" />
             {profile.email}
+          </a>
+          <a
+            href={profile.phoneHref}
+            className="inline-flex items-center gap-2 rounded-lg border border-[color:var(--border)] surface px-5 py-3 text-sm font-medium transition-colors hover:border-accent-cyan"
+          >
+            <Phone size={17} aria-hidden="true" />
+            {profile.phone}
           </a>
           <a
             href={profile.github}

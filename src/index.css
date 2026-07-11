@@ -85,6 +85,43 @@
     color: transparent;
   }
 
+  /* Section-only teal→emerald accent, used exclusively by The Current Bet so it
+     reads as its own thing against the site's cyan→indigo. */
+  .bet-gradient {
+    background: linear-gradient(90deg, #2dd4bf 0%, #10b981 100%);
+  }
+
+  .bet-accent-text {
+    background: linear-gradient(90deg, #2dd4bf 0%, #10b981 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+  }
+
+  /* Softly pulsing status dot; disabled under reduced-motion. */
+  .bet-pulse-dot {
+    animation: bet-pulse 2.4s ease-in-out infinite;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .bet-pulse-dot {
+      animation: none;
+    }
+  }
+
+  @keyframes bet-pulse {
+    0%,
+    100% {
+      opacity: 1;
+      transform: scale(1);
+    }
+    50% {
+      opacity: 0.35;
+      transform: scale(0.8);
+    }
+  }
+
   /* Mono kicker / section label */
   .kicker {
     font-family: theme('fontFamily.mono');

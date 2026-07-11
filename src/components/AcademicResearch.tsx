@@ -5,7 +5,7 @@ import { SectionHeading } from './SectionHeading'
 export function AcademicResearch() {
   return (
     <section id="research" className="mx-auto max-w-6xl scroll-mt-20 px-5 py-20 sm:px-8 md:py-28">
-      <SectionHeading kicker="// 05 — Academic Research" title="Academic Research" />
+      <SectionHeading kicker="// 06 — Academic Research" title="Academic Research" />
 
       <ol className="relative ml-1.5 border-l border-[color:var(--border)]">
         {academicResearch.map((item, i) => (

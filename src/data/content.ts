@@ -32,12 +32,6 @@ export interface Project {
   description: string
   chips: string[]
   buttons: ProjectButton[]
-  /**
-   * Lifecycle state. "upcoming" projects are in the design/architecture phase:
-   * they render an architecture-preview placeholder and a single link button
-   * (no live demo, reveal token, or screenshot lightbox).
-   */
-  status?: 'upcoming'
   /** Optional caption shown under the action buttons. */
   caption?: string
   /** Screenshot paths (under /public). Missing files are tolerated at runtime. */
@@ -55,6 +49,35 @@ export interface ResearchItem {
   description: string
   chips: string[]
   github: string
+}
+
+/** An "Architecture highlights" entry: an accented lead phrase plus a detail clause. */
+export interface BetHighlight {
+  title: string
+  detail: string
+}
+
+/** A single step in the phase-roadmap strip. */
+export interface BetPhase {
+  label: string
+  detail: string
+}
+
+export interface CurrentBet {
+  id: string
+  name: string
+  /** Short status shown in the pulsing pill, e.g. "In active design". */
+  statusPill: string
+  subtitle: string
+  /** Muted line that qualifies the status — deliberately honest about maturity. */
+  statusLine: string
+  description: string
+  highlights: BetHighlight[]
+  phases: BetPhase[]
+  chips: string[]
+  buttons: ProjectButton[]
+  /** Screenshot paths (under /public). Missing files are tolerated at runtime. */
+  screenshots?: string[]
 }
 
 export interface AcademicResearchItem {
@@ -92,13 +115,17 @@ export const profile = {
   name: 'Shreyash Kalal',
   role: 'AI & Data Engineer',
   email: 'ssk241@scarletmail.rutgers.edu',
+  phone: '+1 848-668-3356',
+  phoneHref: 'tel:+18486683356',
   github: 'https://github.com/Shreyash-prog',
   linkedin: 'https://www.linkedin.com/in/shreyash-k-a89823174/',
+  resume: '/docs/Shreyash-Kalal-Resume.pdf',
 }
 
 export const navLinks: NavLink[] = [
   { label: 'About', href: '#about' },
   { label: 'Stack', href: '#stack' },
+  { label: 'The Bet', href: '#bet' },
   { label: 'Experience', href: '#experience' },
   { label: 'Projects', href: '#projects' },
   { label: 'Research', href: '#research' },
@@ -116,17 +143,37 @@ export const hero = {
   taglineBefore: 'I build ',
   taglineAccent: 'production AI systems',
   taglineAfter: ' and the large-scale data platforms beneath them.',
-  subline:
-    'From multi-agent platforms and RAG to modular, metadata-driven data infrastructure at scale. MS in Data Science, Rutgers. Currently a Senior Engineer at Capgemini (Cox Communications).',
+  // Segments render inline; `{ accent }` spans get the cyan→indigo accent gradient.
+  subline: [
+    'I build AI systems people can ',
+    { accent: 'direct safely' },
+    ' — and ',
+    { accent: 'prove were worth it' },
+    '. Production AI platforms and the data infrastructure beneath them. MS in Data Science, Rutgers · Senior Engineer at Capgemini (Cox Communications).',
+  ] as AboutSegment[],
 }
 
 // ---------------------------------------------------------------------------
 // About
 // ---------------------------------------------------------------------------
 
-export const about = {
-  paragraph:
-    'An engineer working at the seam between AI/ML and data-platform engineering — equally at home designing agentic systems that generate and validate production SQL and building the ingestion and quality frameworks that move data reliably at scale. MS in Data Science, Rutgers.',
+/**
+ * A paragraph is a list of inline segments. Plain strings render as-is; an
+ * `{ accent }` segment is highlighted in the site's accent gradient — letting us
+ * accent specific words ("trust", "proof") without a fragile find-and-replace.
+ */
+export type AboutSegment = string | { accent: string }
+
+export const about: { paragraphs: AboutSegment[][] } = {
+  paragraphs: [
+    [
+      'Coding agents made building cheap. The hard problems left are ',
+      { accent: 'trust' },
+      ' — operating safely inside someone else’s environment — and ',
+      { accent: 'proof' },
+      ' — showing the work was actually worth it. Everything I build points there: measuring how well people drive AI, automating cloud remediation behind human approval and an audit trail, making team context durable, and now Fieldcraft.',
+    ],
+  ],
 }
 
 // ---------------------------------------------------------------------------
@@ -140,7 +187,7 @@ export const experience: ExperienceItem[] = [
     dates: '2022–Present',
     role: 'Senior Engineer (AI & Data)',
     description:
-      'Production data and AI platforms for a major US telecom: modular, metadata-driven ingestion frameworks across tens of thousands of pipelines; multi-agent systems that generate, validate, and deploy warehouse transformation logic with human-in-the-loop review; and statistical data-quality and observability frameworks wired into automated alerting and remediation. In 2026, worked directly on the engineering integration behind the landmark Charter–Cox merger — the $34.5B combination that formed the largest broadband provider in the US.',
+      'Production data and AI platforms for a major US telecom: modular, metadata-driven ingestion frameworks across tens of thousands of pipelines; multi-agent systems that generate, validate, and deploy warehouse transformation logic with human-in-the-loop review; and statistical data-quality and observability frameworks wired into automated alerting and remediation. Currently working on the engineering integration behind the landmark Charter–Cox merger — the $34.5B combination forming the largest broadband provider in the US.',
   },
   {
     org: 'Aurigo Software Technologies',
@@ -251,30 +298,77 @@ export const projects: Project[] = [
       '/images/projects/team-ai-memory/03-search.png',
     ],
   },
-  {
-    id: 'ai-native-developer-board',
-    title: 'AI-Native Developer Board',
-    status: 'upcoming',
-    description:
-      'A platform for directing AI coding agents like a team rather than pair-programming one session at a time. Work enters as tickets on a JIRA-style board; a durable loop controller (Temporal, one workflow per ticket) runs the develop → verify → iterate cycle while developers steer by comment. Its spine: a canonical Run domain kept separate from JIRA via one-way projections, an append-only event log as the source of truth (agent sessions are disposable), a deterministic Turn Assembler that classifies human feedback into precise directives, optimistic branch-per-ticket concurrency behind a serialized merge queue, and three ordered verification gates with grader anti-gaming. The vision: make AI-assisted development auditable, reproducible, and reviewable — humans directing and verifying rather than hand-writing every change.',
-    chips: [
-      'Temporal',
-      'Event Sourcing',
-      'Postgres',
-      'S3',
-      'JIRA',
-      'LLM-as-Judge',
-      'CI/CD',
-      'Merge Queue',
-    ],
-    buttons: [
-      {
-        label: 'View Architecture',
-        href: 'https://github.com/Shreyash-prog/ai-native-board',
-      },
-    ],
-  },
 ]
+
+// ---------------------------------------------------------------------------
+// The Current Bet — Fieldcraft
+// ---------------------------------------------------------------------------
+
+export const currentBet: CurrentBet = {
+  id: 'bet',
+  name: 'Fieldcraft',
+  statusPill: 'In active design',
+  subtitle: 'The force-multiplier and measurement layer for forward-deployed engineering.',
+  statusLine:
+    'Architecture and plan specified — a build blueprint, not a claim of shipped traction.',
+  description:
+    "The bet: in enterprise AI the scarce input is no longer the model — it's deployment, and the engineer who embeds in a customer's environment to make a system actually work there. Fieldcraft lets one such engineer operate at the throughput of a team, directing coding agents through a governed build → verify → review → ship loop that runs entirely inside the customer's trust boundary. Then it proves the work: an After-Action Review layer measures cost, cycle time, outcome quality, and how skillfully the human drove the AI — turning 'the delivery went well' from an assertion into evidence. Architecturally it's a split plane: a thin multi-tenant control plane that only ever sees metadata, and a customer-resident execution plane where source, secrets, and inference (via the customer's own Amazon Bedrock) never leave the account — bound by an event spine that doubles as the audit trail and the measurement source.",
+  highlights: [
+    {
+      title: 'Split-plane topology',
+      detail: 'metadata crosses the boundary; code, secrets, and inference never do',
+    },
+    {
+      title: 'Field Guide',
+      detail: 'an agent-bootstrapped, versioned brain per codebase; context as a compounding asset',
+    },
+    {
+      title: 'Governed loop',
+      detail: 'Brief → agent turn → verification → human review, with a trust dial for review depth',
+    },
+    {
+      title: 'Quartermaster',
+      detail: 'just-in-time, narrowly-scoped credentials; no standing production authority',
+    },
+    {
+      title: 'Three verification gates',
+      detail:
+        'deterministic checks, authoritative CI, advisory LLM grader; test files are protected paths',
+    },
+    {
+      title: 'After-Action Review',
+      detail: 'effectiveness, efficiency, and AI-usage quality, measured separately',
+    },
+  ],
+  phases: [
+    { label: 'Phase 0', detail: 'Prove the loop' },
+    { label: 'Phase 1', detail: 'Supervise & bound' },
+    { label: 'Phase 2', detail: 'Enterprise-safe, in-boundary' },
+    { label: 'Phase 3', detail: 'Scale & prove value' },
+  ],
+  chips: [
+    'Claude Agent SDK',
+    'Temporal',
+    'Amazon Bedrock',
+    'AWS',
+    'Terraform/CDK',
+    'Event Sourcing',
+    'Postgres',
+    'ECS Fargate',
+    'LLM-as-Judge',
+  ],
+  buttons: [
+    { label: 'Read the Whitepaper', href: '/docs/Fieldcraft-Whitepaper.pdf' },
+    { label: 'View on GitHub', href: 'https://github.com/Shreyash-prog/Fieldcraft' },
+  ],
+  // Optional — folder may be empty; missing files are tolerated and the image
+  // area hides itself gracefully (see useAvailableImages).
+  screenshots: [
+    '/images/projects/fieldcraft/01-architecture.png',
+    '/images/projects/fieldcraft/02-loop.png',
+    '/images/projects/fieldcraft/03-after-action.png',
+  ],
+}
 
 // ---------------------------------------------------------------------------
 // Projects — Tier 2: Research & Concepts

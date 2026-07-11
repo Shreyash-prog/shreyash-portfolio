@@ -8,7 +8,7 @@ export function Experience() {
       id="experience"
       className="mx-auto max-w-6xl scroll-mt-20 px-5 py-20 sm:px-8 md:py-28"
     >
-      <SectionHeading kicker="// 03 — Experience" title="Experience" />
+      <SectionHeading kicker="// 04 — Experience" title="Experience" />
 
       <ol className="relative ml-1.5 border-l border-[color:var(--border)]">
         {experience.map((item, i) => (

@@ -7,7 +7,7 @@ import { ProjectCard } from './ProjectCard'
 export function Projects() {
   return (
     <section id="projects" className="mx-auto max-w-6xl scroll-mt-20 px-5 py-20 sm:px-8 md:py-28">
-      <SectionHeading kicker="// 04 — Projects" title="Selected Work" />
+      <SectionHeading kicker="// 05 — Projects" title="Selected Work" />
 
       {/* Tier 1 — Novel Builds */}
       <Reveal>

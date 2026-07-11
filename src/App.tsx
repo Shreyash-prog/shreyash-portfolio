@@ -3,6 +3,7 @@ import { Nav } from './components/Nav'
 import { Hero } from './components/Hero'
 import { About } from './components/About'
 import { TechConstellation } from './components/TechConstellation'
+import { CurrentBet } from './components/CurrentBet'
 import { Experience } from './components/Experience'
 import { AcademicResearch } from './components/AcademicResearch'
 import { Projects } from './components/Projects'
@@ -30,6 +31,7 @@ export default function App() {
         <Hero />
         <About />
         <TechConstellation />
+        <CurrentBet />
         <Experience />
         <Projects />
         <AcademicResearch />
