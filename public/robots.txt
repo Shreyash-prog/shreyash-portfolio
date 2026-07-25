@@ -1,4 +1,3 @@
 User-agent: *
 Allow: /
-
 Sitemap: https://shreyash-kalal.vercel.app/sitemap.xml
